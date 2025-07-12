@@ -81,8 +81,12 @@ const downloadBtn = document.getElementById('download-pdf');
 
 function renderQuestion() {
   const q = currentTest.questions[currentQuestion];
+  const currentAnswer = answers[currentQuestion];
   const opts = currentTest.options
-    .map((o, i) => `<label><input type="radio" name="answer" value="${i}"> ${o}</label>`)
+    .map((o, i) => {
+      const checked = currentAnswer === i ? 'checked' : '';
+      return `<label><input type="radio" name="answer" value="${i}" ${checked}> ${o}</label>`;
+    })
     .join('<br/>');
   questionContainer.innerHTML = `
     <h3>${q}</h3>
