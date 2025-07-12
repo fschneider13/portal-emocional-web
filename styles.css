@@ -1,43 +1,187 @@
-body {
-  font-family: Arial, sans-serif;
+/* styles.css */
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
+/* Global Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+button:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Header */
 header {
-  background-color: #3f51b5;
-  color: white;
+  background-color: #007bff;
+  color: #fff;
   padding: 1rem;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.card-container {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+
+/* Main Container */
+main#app {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
-.card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  width: 200px;
-  text-align: center;
-}
-.hidden { display: none; }
+
+/* Consent Modal */
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
+
 .modal-content {
-  background: #fff;
+  background-color: #fff;
   padding: 2rem;
-  border-radius: 4px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* Home Section */
+#home h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.card p {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.card button {
+  align-self: flex-end;
+}
+
+/* Questionnaire Section */
+#questionnaire {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#question-container h3 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.options label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 .controls {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: space-between;
+}
+
+.controls button {
+  min-width: 100px;
+}
+
+/* Result Section */
+#result {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+#result h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+#score {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+canvas#chart {
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+#download-pdf {
+  margin-top: 1rem;
 }
