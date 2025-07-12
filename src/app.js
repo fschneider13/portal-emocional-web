@@ -152,8 +152,7 @@ function startTest(key) {
   renderQuestion();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Consentimento
+function initConsent() {
   const acceptBtn = document.getElementById('accept-consent');
   if (!localStorage.getItem('consent')) {
     consentSection.classList.remove('hidden');
@@ -162,6 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('consent', 'true');
     consentSection.classList.add('hidden');
   });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Consentimento
+  initConsent();
 
   // Iniciar testes pelos cards
   document.querySelectorAll('.card').forEach(card => {
