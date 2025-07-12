@@ -55,27 +55,7 @@
     </section>
   </main>
 
-  <!-- Script de Consentimento Informado isolado -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const consentSection = document.getElementById('consent-section');
-      const acceptBtn = document.getElementById('accept-consent');
-
-      // Exibe o modal se ainda não consentiu
-      if (!localStorage.getItem('consent')) {
-        consentSection.classList.remove('hidden');
-      }
-
-      // Fecha ao clicar em Concordo
-      acceptBtn.addEventListener('click', () => {
-        console.log('Botão Concordo clicado');
-        localStorage.setItem('consent', 'true');
-        consentSection.classList.add('hidden');
-      });
-    });
-  </script>
-
-  <!-- Script principal do app -->
-  <script type="module" src="src/app.js"></script>
-</body>
+    <!-- Script principal do app -->
+    <script type="module" src="src/app.js"></script>
+  </body>
 </html>
