@@ -81,8 +81,12 @@ const downloadBtn = document.getElementById('download-pdf');
 
 function renderQuestion() {
   const q = currentTest.questions[currentQuestion];
+  const currentAnswer = answers[currentQuestion];
   const opts = currentTest.options
-    .map((o, i) => `<label><input type="radio" name="answer" value="${i}"> ${o}</label>`)
+    .map((o, i) => {
+      const checked = currentAnswer === i ? 'checked' : '';
+      return `<label><input type="radio" name="answer" value="${i}" ${checked}> ${o}</label>`;
+    })
     .join('<br/>');
   questionContainer.innerHTML = `
     <h3>${q}</h3>
@@ -148,8 +152,7 @@ function startTest(key) {
   renderQuestion();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Consentimento
+function initConsent() {
   const acceptBtn = document.getElementById('accept-consent');
   if (!localStorage.getItem('consent')) {
     consentSection.classList.remove('hidden');
@@ -158,6 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('consent', 'true');
     consentSection.classList.add('hidden');
   });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Consentimento
+  initConsent();
 
   // Iniciar testes pelos cards
   document.querySelectorAll('.card').forEach(card => {

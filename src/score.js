@@ -29,12 +29,12 @@ export function scoreDASS21(answers) {
   const stress = sum(stressIdx);
   const classify = (val, scale) => {
     const table = {
-      depression: [0,10,14,21,28],
-      anxiety: [0,8,10,15,20],
-      stress: [0,15,19,26,34]
+      depression: [9, 13, 20, 27],
+      anxiety: [7, 9, 14, 19],
+      stress: [14, 18, 25, 33]
     }[scale];
-    const labels = ['Normal','Leve','Moderado','Severo','Extremamente Severo'];
-    let i = table.findIndex(th => val < th);
+    const labels = ['Normal', 'Leve', 'Moderado', 'Severo', 'Extremamente Severo'];
+    let i = table.findIndex(th => val <= th);
     if (i === -1) i = labels.length - 1;
     return labels[i];
   };
