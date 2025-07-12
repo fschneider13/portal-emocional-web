@@ -1,3 +1,5 @@
+// src/app.js
+
 import { scorePHQ9, scoreGAD7, scoreDASS21 } from './score.js';
 
 const tests = {
@@ -61,72 +63,60 @@ const tests = {
   }
 };
 
+let currentTestKey = '';
 let currentTest = null;
 let currentQuestion = 0;
 let answers = [];
 
-const home = document.getElementById('home');
+const homeSection = document.getElementById('home');
+const consentSection = document.getElementById('consent-section');
 const questionSection = document.getElementById('questionnaire');
 const questionContainer = document.getElementById('question-container');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
 const resultSection = document.getElementById('result');
 const scoreDiv = document.getElementById('score');
 const chartCanvas = document.getElementById('chart');
-
-function showConsent() {
-  const consentSection = document.getElementById('consent-section');
-  if (!localStorage.getItem('consent')) {
-    consentSection.classList.remove('hidden');
-    document.getElementById('accept-consent').onclick = () => {
-      localStorage.setItem('consent', 'true');
-      consentSection.classList.add('hidden');
-    };
-  }
-}
-
-function startTest(key) {
-  currentTest = tests[key];
-  currentQuestion = 0;
-  answers = JSON.parse(localStorage.getItem(key + '-answers') || '[]');
-  home.classList.add('hidden');
-  questionSection.classList.remove('hidden');
-  renderQuestion();
-}
+const downloadBtn = document.getElementById('download-pdf');
 
 function renderQuestion() {
   const q = currentTest.questions[currentQuestion];
   const opts = currentTest.options
-    .map((o, i) => `<label><input type="radio" name="answer" value="${i}" ${answers[currentQuestion]==i?'checked':''}/> ${o}</label>`)
-    .join('<br>');
-  questionContainer.innerHTML = `<h3>${q}</h3>${opts}`;
-  document.getElementById('prev').style.display = currentQuestion === 0 ? 'none' : 'inline-block';
-  document.getElementById('next').textContent = currentQuestion === currentTest.questions.length -1 ? 'Finalizar' : 'Próximo';
+    .map((o, i) => `<label><input type="radio" name="answer" value="${i}"> ${o}</label>`)
+    .join('<br/>');
+  questionContainer.innerHTML = `
+    <h3>${q}</h3>
+    <div class="options">${opts}</div>
+  `;
+  prevBtn.style.display = currentQuestion === 0 ? 'none' : 'inline-block';
+  nextBtn.textContent = currentQuestion === currentTest.questions.length - 1 ? 'Finalizar' : 'Próximo';
 }
 
 function saveAnswer() {
   const selected = questionContainer.querySelector('input[name="answer"]:checked');
   if (!selected) return false;
   answers[currentQuestion] = Number(selected.value);
-  localStorage.setItem(currentTest.title + '-answers', JSON.stringify(answers));
+  localStorage.setItem(`${currentTestKey}-answers`, JSON.stringify(answers));
   return true;
 }
 
 function showResult() {
   questionSection.classList.add('hidden');
   resultSection.classList.remove('hidden');
-  let result = currentTest.scorer(answers);
-  if (currentTest === tests.dass21) {
-    scoreDiv.innerHTML = `Depressão: ${result.depression.score} (${result.depression.level})<br>`+
-    `Ansiedade: ${result.anxiety.score} (${result.anxiety.level})<br>`+
-    `Estresse: ${result.stress.score} (${result.stress.level})`;
+
+  const result = currentTest.scorer(answers);
+
+  if (currentTestKey === 'dass21') {
+    scoreDiv.innerHTML = `
+      Depressão: ${result.depression.score} (${result.depression.level})<br/>
+      Ansiedade: ${result.anxiety.score} (${result.anxiety.level})<br/>
+      Estresse: ${result.stress.score} (${result.stress.level})
+    `;
     new Chart(chartCanvas, {
       type: 'bar',
       data: {
-        labels: ['Depressão','Ansiedade','Estresse'],
-        datasets: [{
-          label: 'Pontuação',
-          data: [result.depression.score, result.anxiety.score, result.stress.score],
-          backgroundColor: ['#f87171','#60a5fa','#34d399']
-        }]
+        labels: ['Depressão', 'Ansiedade', 'Estresse'],
+        datasets: [{ label: 'Pontuação', data: [result.depression.score, result.anxiety.score, result.stress.score] }]
       }
     });
   } else {
@@ -135,11 +125,7 @@ function showResult() {
       type: 'bar',
       data: {
         labels: [currentTest.title],
-        datasets: [{
-          label: 'Pontuação',
-          data: [result.total],
-          backgroundColor: ['#60a5fa']
-        }]
+        datasets: [{ label: 'Pontuação', data: [result.total] }]
       }
     });
   }
@@ -152,29 +138,51 @@ function downloadPDF() {
   doc.save('resultado.pdf');
 }
 
-document.querySelectorAll('.card').forEach(card => {
-  card.querySelector('button').onclick = () => startTest(card.dataset.test);
-});
+function startTest(key) {
+  currentTestKey = key;
+  currentTest = tests[key];
+  currentQuestion = 0;
+  answers = JSON.parse(localStorage.getItem(`${key}-answers`) || '[]');
+  homeSection.classList.add('hidden');
+  questionSection.classList.remove('hidden');
+  renderQuestion();
+}
 
-document.getElementById('prev').onclick = () => {
-  if (currentQuestion > 0) {
-    if (saveAnswer()) {
+document.addEventListener('DOMContentLoaded', () => {
+  // Consentimento
+  const acceptBtn = document.getElementById('accept-consent');
+  if (!localStorage.getItem('consent')) {
+    consentSection.classList.remove('hidden');
+  }
+  acceptBtn.addEventListener('click', () => {
+    localStorage.setItem('consent', 'true');
+    consentSection.classList.add('hidden');
+  });
+
+  // Iniciar testes pelos cards
+  document.querySelectorAll('.card').forEach(card => {
+    card.querySelector('button').addEventListener('click', () => {
+      startTest(card.dataset.test);
+    });
+  });
+
+  // Navegação das perguntas
+  prevBtn.addEventListener('click', () => {
+    if (currentQuestion > 0 && saveAnswer()) {
       currentQuestion--;
       renderQuestion();
     }
-  }
-};
+  });
+  nextBtn.addEventListener('click', () => {
+    if (!saveAnswer()) return;
+    if (currentQuestion < currentTest.questions.length - 1) {
+      currentQuestion++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  });
 
-document.getElementById('next').onclick = () => {
-  if (!saveAnswer()) return;
-  if (currentQuestion < currentTest.questions.length -1) {
-    currentQuestion++;
-    renderQuestion();
-  } else {
-    showResult();
-  }
-};
-
-document.getElementById('download-pdf').onclick = downloadPDF;
-
-showConsent();
+  // Exportar PDF
+  downloadBtn.addEventListener('click', downloadPDF);
+});
