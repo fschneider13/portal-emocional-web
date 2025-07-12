@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Emocional</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Portal Emocional</h1>
+  </header>
+  <main id="app">
+    <section id="consent-section" class="modal hidden">
+      <div class="modal-content">
+        <h2>Consentimento Informado</h2>
+        <p>Ao prosseguir, você concorda com a coleta anônima de suas respostas para fins de pesquisa e melhoria deste portal.</p>
+        <button id="accept-consent">Concordo</button>
+      </div>
+    </section>
+    <section id="home">
+      <h2>Escolha um Questionário</h2>
+      <div class="card-container">
+        <div class="card" data-test="phq9">
+          <h3>PHQ-9</h3>
+          <p>Avaliação de sintomas depressivos.</p>
+          <button>Iniciar</button>
+        </div>
+        <div class="card" data-test="gad7">
+          <h3>GAD-7</h3>
+          <p>Avaliação de ansiedade generalizada.</p>
+          <button>Iniciar</button>
+        </div>
+        <div class="card" data-test="dass21">
+          <h3>DASS-21</h3>
+          <p>Avaliação de depressão, ansiedade e estresse.</p>
+          <button>Iniciar</button>
+        </div>
+      </div>
+    </section>
+    <section id="questionnaire" class="hidden">
+      <div id="question-container"></div>
+      <div class="controls">
+        <button id="prev">Anterior</button>
+        <button id="next">Próximo</button>
+      </div>
+    </section>
+    <section id="result" class="hidden">
+      <h2>Resultado</h2>
+      <div id="score"></div>
+      <canvas id="chart" width="400" height="200"></canvas>
+      <button id="download-pdf">Exportar PDF</button>
+    </section>
+  </main>
+  <script src="src/app.js"></script>
+</body>
+</html>
